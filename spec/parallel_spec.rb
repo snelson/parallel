@@ -146,6 +146,14 @@ describe Parallel do
       Process.should_not_receive(:fork)
       Parallel.map([1,2,3,4,5,6,7,8,9], :in_processes => 0){|x| x+2 }.should == [3,4,5,6,7,8,9,10,11]
     end
+    
+    it "runs with output before and after" do
+      lambda{
+        Timeout::timeout(1) do
+          `ruby spec/cases/map_with_output_before_and_after.rb`.should == "BEFORE\nAFTER"
+        end
+      }.should_not raise_error(Timeout::Error)
+    end
   end
 
   describe :map_with_index do
